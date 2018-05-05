@@ -1,0 +1,886 @@
+\documentclass[10pt,a4paper,oneside]{book}
+\usepackage[letterpaper, left=2cm, top=2cm, right=2cm, bottom=2cm]{geometry}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\begin{document}
+
+\section*{Instalacion}
+\begin{enumerate}
+\item yaourt -Syua geant4 geant4-abladata geant4-ensdfstatedata geant4-ledata
+  geant4-levelgammadata geant4-neutronhpdata geant4-neutronxsdata
+  geant4-piidata geant4-radioactivedata geant4-realsurfacedata
+  geant4-saiddata
+\end{enumerate}
+
+
+\section*{CMake}
+\begin{enumerate}
+\item Este man escribe los makefile
+\item Hay que ejecutarlo nuevamente cuando se cambie la jerarquia de
+  directorios.
+\item CMake soporta la generación de ficheros para varios sistemas
+  operativos
+\item CMake es para Make como el compilador de C/C++ para el lenguaje
+  ensamblador.
+\end{enumerate}
+
+\section*{C/C++}
+Ahora hablemos de algunos conceptos fundamentales involucrados en
+programacion, por el momento particularicemolo a c++. Aunque estas
+definiciones pueden hacerse generales en otros lenguajes.
+\begin{enumerate}
+\item Principio de privilegio minimo: el codigo debe dar prinvilegio y
+  acceso unicamente para completar una tarea especifica y no mas.
+\item La clase es la unidad fundamental en c++, mientras que la
+  función es la unidad fundamental en c.
+\item Una categoria es el tipo de objeto, clase , funcion, casa...
+\item Podemos llamar los integrantes de una clase como miembros, si
+  los miembros son funciones decimos que son metodos, si los miembros
+  son varibles o datos decimos que son data members o atributos. Es
+  decir todos los objetos de la clase pueden manipular su atributos
+  atraves de los metodos de la clase.
+\item Una asociación entre clases, es básicamente una relación. Por
+  ejemplo la herencia es un tipo de asociación.
+\item Un identificador es el nombre que le ponenos a un tipo de
+  variable u objeto.
+\item *Storage Class (Tipo de almacenamiento): determina el periodo
+  durante el cual un identificado existe en la memoria por ejemplo
+  (static y auto) -> Este concepto esta mas relacionado con el tiempo
+\item auto: indica que la variable existe mientras el bloque donde se
+  creo este activo. Se destruyen cuando el bloque ya no este
+  activo. Solo las variables locales pueden ser una clase de
+  almacenamiento automatico. La mayorias de variables locales se
+  definen por defecto.
+\item static y extern: existen desde que se inicia la ejecución hasta
+  que el programa termina
+\item *Scope (Alcance): hasta donde un identificador puede ser
+  referenciado en un programa. -> Este concepto esta mas relacionado
+  con el lugar.
+\item Tipos de miembros de una clase: public(que lo puedo llamar por
+  fuera.), private (No se puede llamar por fuera de la clase,
+  unicamente las funciones miembro tienen acceso), protected (Tanta la
+  clase base como sus clases derivadas tienen acceso ) en el caso de
+  una herencia los miembros los protegidos se heredan como privados.
+  
+\end{enumerate}
+
+Muchos ejemplos de Geant4 estan escritos con codigo mixto entonces
+acontinuacion estan algunas funciones de C usadas usualmente en Geant
+\begin{enumerate}
+\item $\#$define : permite definir macros (no los puede modificar el
+  codigo) el compilador cambia todo lo que tenga definido el macro por
+  su valor. Es un preprocesador de C.
+\item const : usualmente usado para definir las constantes globales
+  del codigo (es una variable que el compilador entiende que no puede
+  modificar)
+\end{enumerate}
+
+Ahora mencionemos unos cuantos conceptos nuevos importantes
+involucrados, que nos podemos encontrar en la implementacion de
+geant4.
+\begin{enumerate}
+\item El concepto de virtual esta asociado a dos aplicaciones. Todas
+  directamente relacionados con el concepto de herencia supongamos que
+  tenemos una clase y que en una aplicacion solo necesitamos esa
+  clase. Definirle metodos virtuales no tendría ningun sentido si esa
+  clase no es la clase base para una futura herencia ya que esos
+  metodos no estarian definidos nunca. Esta idea general es lo que se
+  conocer como polimorfismo. es decir los metodos de las clases son
+  heredados por otras clases pero tiene otra "forma" porque se estan
+  sobrecargando con otras firmas("los parametros del metodo son
+  diferentes")
+\item Poner un metodo virtual en la clase implica que para que los
+  objetos de la clase sean reales que la clase que hereda estos
+  metodos definan todos los miembros y atributos virtuales.
+\item the virtual function can be overriden and the pure virtual must
+  be implemented.
+\item Derived classes frequently, but not always, override the virtual
+  functions that they inherit. If a derived class does not override a
+  virtual from its base, then, like any other member, the derived
+  class inherits the version defined in its base class.
+\item El tipo de variable static esta asociado a que todos los objetos
+  de la clase tienen definido el mismo miembro o metodo, por eso es
+  importante para llamar siempre al mismo atributo o miembro de una
+  clase cada ves que lo necesito, por ejemplo el atributo puede ser la
+  clase miembro y el metodo el que permite acceder a esa clase
+  miembro, de esta forma siempre se accede a la mismo metodo que
+  devuelve la clase miembro y a la misma clase miembro. Lo cual puede
+  ser util para instanciar siempre el mismo objeto de la clase.
+\item Las funciones tambien pueden tener dentro variables estaticas
+  que cada vez que se entra a la funcion usan la misma variable no se
+  definen nuevamente. Por ejemplo el numero de cuentas de personas que
+  nacen o mueren en un juego y que la funcion o metodo sea disparar
+  cada ves que se dispare se usara siempre el mismo valor estatico de
+  numero de personas que puede ir cambiando. Seria algo asi como una
+  variable global que solo puede modificar es funcion.
+\item const son variables que permanecen fijas durante la simulación.
+  La forma de inicializar los const de una clase base a traves de
+  herencia es con () y comas, aunque de esta forma se puede
+  inicializar en general cualquier variable. En el constructor de la
+  clase.
+\item extern es un tipo de variable global que puede ser usada por
+  diferentes estruscturas de datos con el fin de cambiar el alcance de
+  la variable.
+\item typedef permite definir un alias para tipos de variables. Por
+  ejemplo: typedef double wages. Significa que wages es sinonimo de
+  doubles
+\item Un apuntador es una dirección de memoria, por eso todo apuntador
+  debe eliminarse despues que se deje de usar la memoria.
+\end{enumerate}
+
+\section*{Geant4 Introduccion}
+\begin{enumerate}
+\item La clase mas importante de todas son runmanager y
+  multithreadmanager.  En el fondo de estas clases estan los metodos
+  motecarlo. Y esta son las que administra la simulacion. Realmente el
+  mutitread manager es una composicion de G4Manager
+\item Hay dos tipos de classes de usuario las $\textbf{Action}$ y las
+  \textbf{Initialization}. Las inicialization las debe establecer el
+  G4RunManager a traves de los métodos SetUserInitialization(),
+  mientras que las classes action deberian se definidas por
+  G4VUserActionInitialization. Usualmente se crea una clase que era de
+  esta para hacer dicho proceso.
+\item Hay tres Initialization clases que son obligatorias:
+  G4VUserDetectorConstruction, G4VUserPhysicsList y
+  G4VUserActionInitialization. EL RunManager verifica la existencia de
+  estas clases cuando se llama los metodos Initialize() y
+  BeamOn(). G4VUserActionInitialization obligatoriamente debe incluir
+  G4VUserPrimaryGeneratorAction.
+\item De todas las clases Action la única que es obligatoria de
+  definir es G4VUserPrimaryGeneratorAction. Adicionalmente Geant4
+  suministra cinco clases Action. Que permiten acceder a los
+  diferentes niveles de la simulación.
+  \begin{enumerate}
+  \item G4UserRunAction
+  \item G4UserEventAction
+  \item G4UserStackingAction
+  \item G4UserTrackingAction
+  \item G4UserSteppingAction
+  \end{enumerate}
+
+\item G4UImanger permite invocar metodos de clases de objetos en los
+  cuales no se sepa el apuntador. Muy útil por ejemplo para ejecutar
+  macros:
+  \begin{enumerate}
+  \item $ UI->ApplyCommand("/run/verbose 1");$
+  \item $ UImanager->ApplyCommand("/control/execute init.mac"); $
+  \end{enumerate}
+
+\item G4VUserPhysicsList tiene la responsabilidad de definir todas las
+  partículas y procesos físicos que se debe usar en la
+  simulación. Este man crea objetos G4ProcessManager para todas las
+  particulas definidas en el método puramente virtual
+  ConstructParticle(). Además en este método se deben incluir TODAS
+  las particulas secundarias o primarias que se quieran utilizar en la
+  simulación. A traves de el método puramente virtual
+  ConstructProcess() se crean los procesos físicos y se registran
+  atraves de las instanciaciones de G4ProcessManager de cada partícula.
+\item Son 3 las librerias fundamentales para correr cualquier
+  simulación en Geant: 1 Detector Construction, 2. Physics List,
+  3. Primary Generation Action. La physicslist puede crearse
+  manualmente o insertandole una libreria ya creada. El primary
+  Generation Action, es la fabrica de particulas que iniciaran la
+  accion en la simulacion, esta incializacion puede hacerse
+  manualmente con ParticleGun (codigo directo )o usando General
+  Particle Source (GPS) el cual permite definir el tipo la energia, la
+  posicion, la direccion y el tipo de distribucion, en un macro o via
+  lineas de comando.
+\end{enumerate}
+
+\section*{Como construir un detector}
+\begin{enumerate}
+\item World: EL volumen mas grande que hay que definir.
+\item Solid Volume: La forma del volumen.
+\item Logic Volume: Incluye todas las propiedades del solido, como la
+  geometria del solido, y las propiedades fisicas, material del
+  volumen, si contiene elementos de detector sensible como campos
+  magneticos, etc.
+\item Physical Volume: posiciona una copia del volumen logico dentro
+  de un volumen "madre", la posicion implica un lugar y una rotación
+  en el sistema de coordenadas respecto al origen de la madre. El
+  sistema de coordenadas global  lo define por defecto el volumen
+  lógico del mundo.
+\end{enumerate}
+
+\section*{Como especificar Materiales in el detector}
+\begin{enumerate}
+\item G4Isotope = Unidad fundamental. (Z, A, mass por mol)
+\item G4Element = combinación de isotopos. (Z efectivo, A efectivo,
+  masa efectiva, numero de isotopos, sección eficaz por átomo )
+\item G4Material = Compuestos y mezclas. (densidad, estado, temperatura, presión, camino libre medio, dE/dx)
+\end{enumerate}
+\begin{enumerate}
+\item Unicamente G4Material es el que se usa en el resto de la simulación, 
+\end{enumerate}
+
+\section*{Como especificar Particulas}
+\begin{enumerate}
+\item Se debe crear una herencia de G4VUserPhysicsList, ademas se
+  deben implementar los métodos ConstructParticle(),
+  ConstructProcess() y seguramente se deba sobreescribir el método
+  virtual SetCuts(). El métodos ConstructParticle() es puramente
+  virtual. Aca se deben incluir TODAS las particulas secundarias o
+  primarias que se quieran utilizar en la simulación
+\item Todas las partículas son herencia de G4ParticleDefinition
+  exceptuando G4Ions. Todas las particulas nuevas que se quieran
+  crear, basicamente deben ser herencia de seis categorías mayores.
+  \begin{enumerate}
+  \item lepton
+  \item meson
+  \item baryon
+  \item boson
+  \item shortlived
+  \item ion
+  \end{enumerate}
+
+\item
+  \begin{lstlisting}[language=C++, frame = single]
+    void MyPhysicsList::ConstructParticle()
+    {
+      G4Proton::ProtonDefinition();
+      G4Geantino::GeantinoDefinition();
+    }
+  \end{lstlisting}
+
+  
+\item
+  \begin{lstlisting}[language=C++, frame = single]
+   void ExN05PhysicsList::ConstructLeptons()
+   {
+     G4LeptonConstructor pConstructor;
+     pConstructor.ConstructParticle();
+   }
+ \end{lstlisting}
+
+\item Con SetCuts se evita que las particulas recorran mas de lo que
+  pueda llegar a ser interes, Es util no solo para ahorar computo sino
+  tambien para evitar fenomenos fisicos como la divergencia del
+  infrarojo. Los cuts se definen en distancia y se convierten
+  internamente a energia dependiendo de la particula y del material.
+  Por defecto en el limite superior en energía es 10 GeV y el limite
+  inferior es 1 mm para todas las partículas.
+\end{enumerate}
+
+\section*{Como definir Procesos físicos}
+\begin{enumerate}
+\item Los siguientes son los procesos físicos mayores. 
+  \begin{enumerate}
+  \item electromagnetic
+  \item hadronic
+  \item transportation
+  \item decay
+  \item optical
+  \item photolepton$\_$hadron
+  \item parameterisation
+  \end{enumerate}
+\item Todos los procesos físicos se derivan de G4VProces.
+\item El cual tiene metodos virtuales puros AtRestDoIt, AlongStepDoIt y
+  PostStepDoIt. Los cuales basicamente determinan que se debe hacer en
+  los diferentes estados que puede tener una partícula. Los anteriores
+  métodos son invocados por el G4SteppingManager
+\item Por cada uno de los anteriores existe otros tres metodos
+  puramente virtuales GPIL
+  \begin{enumerate}
+  \item G4double PostStepGetPhysicalInteractionLength( const G4Track track, G4double
+    previousStepSize, G4ForceCondition* condition )
+  \item G4double AlongStepGetPhysicalInteractionLength( const G4Track
+    track, G4double previousStepSize, G4double currentMinimumStep,
+    G4double proposedSafety, G4GPILSelection* selection )
+  \item G4double AtRestGetPhysicalInteractionLength( const G4Track
+    track, G4ForceCondition* condition )
+  \end{enumerate}
+\item Adicionalmente a los metodos anteriores si se quiere definir un
+  proceso físico, se deben implementar los siguientes metodos
+  puramente virtuales
+  \begin{enumerate}
+  \item virtual G4bool IsApplicable(const G4ParticleDefinition)
+  \item virtual void PreparePhysicsTable(const G4ParticleDefinition)
+  \item virtual void BuildPhysicsTable(const G4ParticleDefinition)
+  \item virtual void StartTracking()
+  \item virtual void EndTracking()
+  \end{enumerate}
+
+\item Otros procesos físicos especializados podrian definirse a partir
+  de las siguientes clases virtuales derivadas de G4VProcess
+  \begin{enumerate}
+  \item G4VRestProcess: Se usa unicamente el AtRestDoit (Captura
+    Neutronica).
+  \item G4VDiscreteProcess: usa unicamente PostStepDoIt (Compton Scattering)
+  \item G4VContinuousDiscreteProcess: usa AlongStepDoIt y PostStepDoIt
+    (Transporte, ioniascion.)
+  \item G4VRestDiscreteProcess: usa AtRestDoIt y PostStepDoIt
+    (aniquilación positrónica y decaimiento.)
+  \item G4VRestContinuousProcess: usa AtRestDoIt y AlongStepDoIt
+  \item G4VRestContinuousDiscreteProcess: usa AtRestDoIt,
+    AlongStepDoIt y PostStepDoIt
+  \end{enumerate}
+
+\item G4ProcessManager contiene una lista de los procesos que una
+  particula puede realizar y el orden en que se invocan los procesos. Hay
+  un G4ProcessManager para cada partícula y este esta atado a la clase
+  G4ParticleDefiniton (Cual es el tipo de relación?)
+\item El ordenamiento de los procesos se registra con los metodos
+  AddProcess() y SetProcessOrdering()
+\item El G4ProcessManager puede desactivar y activar procesos con los
+  metodos ActivateProcess() y InActivateProcess(), sin embargo esto se
+  puede hacer unicamente despues de que se registre le proceso.
+\item Registrar un proceso puede ser complicado ya que hay relaciones
+  entre procesos. Para ello se inventaron el G4PhysicsListHelper. Por
+  ejemplo:
+  \begin{lstlisting}[language=C++, frame = single]
+    void MyPhysicsList::ConstructProcess()
+    {
+      // Define transportation process
+      AddTransportation();
+      // electromagnetic processes
+      ConstructEM();
+    }
+    
+    void MyPhysicsList::ConstructEM()
+    {
+      // Get pointer to G4PhysicsListHelper
+      G4PhysicsListHelper* ph = G4PhysicsListHelper::GetPhysicsListHelper();
+      
+      //  Get pointer to gamma
+      G4ParticleDefinition* particle = G4Gamma::GammaDefinition(); 
+      
+      // Construct and register processes for gamma 
+      ph->RegisterProcess(new G4PhotoElectricEffect(), particle);
+      ph->RegisterProcess(new G4ComptonScattering(), particle);
+      ph->RegisterProcess(new G4GammaConversion(), particle);
+      ph->RegisterProcess(new G4RayleighScattering(), particle);
+    }  
+  \end{lstlisting}
+\end{enumerate}
+Unicamente los procesos pueden cambiar la información de los G4Track y
+agregar tracks secundarios. Esto no se hace durante los DoIt, sino que
+son un resultado de usar G4VParticleChange. La informacion del estado
+final de un track incluyendo tracks secundarios es generada en los
+Doit y almacenada en los G4VParticleChange. Los procesos físicos
+actualizan la instancia de G4VParticleChange. Por lo tanto
+G4VParticleChange es el responsable de actualizar el step. El stepping
+manageer almacena los tracks secundarios.  G4Track se actualiaza al
+finalizar todos los AlongStepDoIt y despues de cada PostStepDoIt.
+
+G4VParticleChange, tiene los siguientes métodos virtuales puros.
+\begin{enumerate}
+\item virtual G4Step* UpdateStepForAtRest( G4Step* step),
+\item virtual G4Step* UpdateStepForAlongStep( G4Step* step )
+\item virtual G4Step* UpdateStepForPostStep( G4Step* step)
+\end{enumerate}
+
+
+
+\section*{Como generar eventos primarios}
+\begin{enumerate}
+\item Hay tres tipos de primary generators
+  (G4VPrimaryGenerator). G4ParticleGun, G4GeneralParticleSource y G4HEPEvtInterface
+\item Realmente el que esta generando el evento primario no es un
+  objeto de G4VuserPrimaryGeneratorAction, el unicamente esta
+  definiendo la forma como las particulas primarias son creadas. EL
+  que realmente genera las particulas primarias es
+  G4VPrimaryGenerator. Lo cual se hace cuando se llama al método
+  puramente virtual de G4VuserPrimaryGeneratorAction
+  generatePrimaries(), donde internamente un G4VPrimaryGenerator
+  invoca al método generatePrimaryVertex()
+\end{enumerate}
+
+\section*{Sistema de Unidades}
+\begin{enumerate}
+\item Es obligatorio definirle unidades a los datos. Esto siempre se
+  hace con la multiplicación 
+\item Para sacar los datos en las unidades de interes basta con
+  dividir el valor  $G4cout << KineticEnergy/keV $
+\item Definir nuevas unidades
+  \begin{lstlisting}[language=C++, frame = single]
+    new G4UnitDefinition ( name, symbol, category, value )
+    new G4UnitDefinition ( "km/hour" , "km/h", "Speed", km/(3600*s) );
+  \end{lstlisting}
+\end{enumerate}
+
+\section*{Geant4 Conceptos Fundamentales}
+Al igual que en matematicas una categoria es una estructura
+algebraica, que consta de objetos conectados unos con otros con
+flechas. Las flechas se pueden componer unas con otras de manera
+asociativa, y para cada objeto existe una flecha que se comporta como
+un elemento neutro. Por ejemplo en la categoria de conjuntos, los
+objetos son los conjuntos y las flechas son las funciones
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{im/classCategory.jpg}
+  \caption[]{Esquema de la funcionalidad de Geant4 (daigrama de categorias)}
+\end{figure}
+
+La categoria global cubre el sistema de unidades, constantes y numeros
+aleatorios.  Las categorias materialss y particles implementan las
+propiedades físicas de partículas y materiales. El modulo geometry
+define la geometria. La categoria track contiene los tracks y los
+steps. Usados por la Categoria process la cual implementa modelos
+fisicos. Estos procesos son llamados por la categoria tracking que
+administra la evolucion de los tracks y provee de informacion de los
+volumenes sensibles a los hits y digitalizacion.  La categoria Event
+adminsitra los eventos en terminos de sus tracks.  La categoria Run
+administra la recoleccion de eventos que comparten un haz comun e
+implentacion de detectores. Finalmente la categoria readout administra
+el pile-up.  La persistencia de objetos permite que los objetos vivan
+despues de la terminacion de la aplicacion de un procesos y pueda ser
+usado por otro proceso.
+
+\begin{enumerate}
+\item Hit: cuando ocurre un fenomeno fisico o un cambio de volumen (se
+  llega a un punto de frontera) (de cierta forma esta definido en una
+  region del espacio). Formalmente hablando es simplemente un exito,
+  es decir algo ocurre.
+\item Step: distancia(memoria) entre dos hits.
+\item Track: toda la secuencia de steps, esta definido por particula.
+\item Event: Una secuencia de tracks correlacionada (por ejemplo
+  creacion de pares a tres track el foton inicial y el positron y
+  electron creados )
+\end{enumerate}
+
+\section*{Geant4 Conceptos derivados}
+\begin{enumerate}
+\item Un G4PrimaryVertex almacena la informacion de posición y tiempo
+  de las partículas primarias. Por lo tanto varias partículas
+  primarias pueden estar en el mismo vertex.
+\end{enumerate}
+
+\section*{Run}
+\begin{enumerate}
+\item Un run es la unidad mas grande de simulacion.
+\item Un run es una secuencia de eventos.
+\item Durante un run la geometria, el montaje de detectores sensible y
+  la fisica no pueden cambiar.
+\item Pero el G4RunManager puede cambiar la geometría o la física al
+  finalizar un run específico.
+\item El \textbf{G4RunManager} manipula un loop de eventos atraves del método
+  DoEventLoop(). Donde se construye un objeto G4Event y se asocian las
+  particulas primarias, posteriormente el G4EventManager se encarga de
+  asociar los hits y las trayectorias al evento.
+\item Si los detectores sensibles y los modulos de digitalizacion son
+  simulados entonces el run tiene acceso a G4VHitsCollection y
+  G4VDigiCollection.
+\item El runaction no crea el run solo modifica sus propiedades. El
+  run es creado por el runmanager, por lo que si se quiere obtener el
+  ID, lo cual es muy util en paralelizacion
+\item El RunAction hace el papel del master y si no se define un Run
+  interno tambien hace el papel de worker
+\end{enumerate}
+
+\section*{Event}
+\begin{enumerate}
+\item Los eventos contienen cuatro tipos de información.
+  \begin{enumerate}
+  \item Vertices primarios y particulas primarias.
+  \item Trayectorias
+  \item Colección de Hits (Solo si el detector es sensible)
+  \item Colección de Digits 
+  \end{enumerate}
+\item El \textbf{G4EventManager} tiene las siguientes responsabilidades:
+  \begin{enumerate}
+  \item Convertir los G4PrimaryVertex y
+    G4PrimaryParticle objetos, asociados con el evento actual en objetos
+    G4Track. Todos los G4Track que representan particulas primarias se
+    envían al \textbf{G4StackManager}
+  \item Enviar los G4Track del G4StackManager hacia el
+    G4TrackingManager. Los tracks unicamente se eliminan cuando ya han
+    pasado por el G4TrackingManager.
+  \item Cuando G4StackManager devuelve NULL, G4EventManager finaliza
+    el evento actual que se esta procesando.
+  \item Llama la metodos beginOfEventAction() y endOfEventAction()
+    definidos en el G4UserEventAction
+  \end{enumerate}
+\end{enumerate}
+
+\section*{Track}
+
+
+
+\section*{Hits}
+Un hit es una instantanea de una interaccion física de un track en la
+region sensible de un detector. El hecho de que sea en una region
+sensible es una de las principales diferencias respecto al
+step. Básicamente en un hit se puede almacenar la siguiente
+información.
+\begin{enumerate}
+\item Posición y tiempo del step.
+\item Momento y Energía del track.
+\item Energía depositada del step.
+\item Información geométrica.
+\end{enumerate}
+Cuando se procesa un G4Event se producen muchos objetos G4VHit( esta
+es la clase que representa el concepto de hit) los cuales se almacenan
+atraves de una coleccion G4VHitsCollection, usualmente esta coleccion
+de hits se instancia a traves de una clase template G4THitsCollection
+la cual es herencia de G4VHitsCollection. El parametro del template es
+el Hit que you haya definido.
+\\
+Una alternativa a G4THitsCollection es un G4THitsMap, el cual no
+requiere un G4VHit, pero en su lugar requiere de una variable que
+pueda mapearse como una llave tipo entero. Tipicamente la llave es el
+número de copia del volumen. Los mapas son muy utiles cuando no se
+requiera analizar los datos evento por evento, sino simplemente
+acumularlos. G4THitsMap es una herencia de G4VHitsCollection.
+\\
+Los objetos de G4THitsMap y G4THitsCollection se almacenan en
+G4HCofThisEvent el final del evento.
+
+\subsection*{G4VSensitiveDetector}
+Esta clase representa el concepto de detector sensible. Este concepto
+es posterior en Geant y se creo con el fin de dotar a las simulaciones
+con la misma estructura de los experimentos.  Antes de eso se
+utilizaban los scores de los hooks, es decir basicamente se almacenaba
+la informacion unicamente de los volumenes logicos que se les ponga el
+nombre de "scorer" pero al final de cuentas en cada hook se preguntaba
+si se esta dentro del scorer o por fuera.
+\\
+La primera obligacion de los detectores sensibles es contruir los hits
+usando la información de los steps a lo largo del track de una
+partícula. Esto se hace a traves del método ProcessHits, el cual usa
+un G4Step como entrada o un G4TouchableHistory en caso de que las
+geometrias sean de lectura (Readout)
+\\
+La segunda obligacion es construir el detector usando el método
+G4VUserDetectorConstruction::ConstructSDandField(), en esta parte se
+asigna uno o mas detectores sensibles a uno o varios G4LogicalVolume
+$ SetSensitiveDetector("LogicalV Name", mySensitiveDetector ,
+true);$. Adicionalmente los punteros de estos volumenes logicos, deben
+registrarse a G4SDManager. El G4SDManager es un singleton
+\\
+Hay tres metodos virtuales mayores:
+\begin{enumerate}
+\item ProcessHits(G4Step* , G4TouchableHistory*): Este metodo es llamado por el G4SteppingManager,
+  cuando un se crea un step in el G4LogicalVolume que es el apuntador
+  que se le asigno al detector sensible.
+\item Initialize(G4HCofThisEvent ): Se llama al inicion de cada
+  evento. Tambie se puede asociar el hits collection para durante el
+  proceso de los eventos se realize la digitalizacion.
+\item EndOfEvent(G4HCofThisEvent ): se llama al final del event, se
+  usa ocasionalmete para asociar los G4HCofThisEvent del detector
+  sensible con los objetos argumento.
+\end{enumerate}
+
+Es posible asignar multiples detectores sensibles a un mismo volumen
+lógico, esto se logra a traves de G4MultiSensitiveDetector
+
+\subsection*{Accediendo a las colecciones de hits }
+A las colecciones de hits es importante acceder en casos como:
+\begin{enumerate}
+\item Digitalización
+\item Filtrado de Eventos en G4VUserStackingAction
+\item El final del evento para analisis simple.
+\item Dibujar y pintar los hits.
+\end{enumerate}
+
+\begin{lstlisting}[language=C++, frame = single]
+     G4SDManager* fSDM = G4SDManager::GetSDMpointer();
+  G4RunManager* fRM = G4RunManager::GetRunManager();
+  G4int collectionID = fSDM->GetCollectionID("collection_name");
+  const G4Event* currentEvent = fRM->GetCurrentEvent();
+  G4HCofThisEvent* HCofEvent = currentEvent->GetHCofThisEvent();
+  MyHitsCollection* myCollection = (MyHitsCollection*)(HC0fEvent->GetHC(collectionID));
+\end{lstlisting}
+
+
+\subsection*{G4MultiFunctionalDetector y G4VPrimitiveScorer}
+G4MultiFunctionalDetector es una clase específica derivada
+G4VSensitiveDetector tambia a los volumenes lógicos de interés se les
+asigna un detector sensible.
+$ SetSensitiveDetector("LogicalV Name", myMultiFunctionalDetector ,
+true);$
+\\
+Un G4VPrimitiveScorer no debería ser comportido por mas de un
+G4MultiFunctionalDetector. G4VPrimitiveScorer crea un G4THitsMap por
+evento. El mapa tiene el mismo nombre que el primitivescorer. Todos
+los primitivescorer generan mapas de doubles G4THitsMap<G4double>
+
+\subsection*{Digitalizacion}
+G4VDigitizerModule se encarga tipicamente de simular :
+\begin{enumerate}
+\item ADC
+\item readout scheme
+\item datos crudos.
+\item logica de trigers
+\item pile up
+\end{enumerate}
+G4VDigi es una clase abstracta que representa un digito.
+G4TDigiCollection is a template class for digits collections, which is
+derived from the abstract base class G4VDigiCollection. G4Event has a
+G4DCofThisEvent object, which is a container class of collec- tions of
+digits. The usages of G4VDigi and G4TDigiCollection are almost the
+same as G4VHit and G4THitsCollection.
+\\
+El trabajo interesante lo hace G4VDigitizerModule a traves de un
+metodo puramente virtual, Digitize(). Osea el usuario siempre lo debe
+definir.
+\\
+G4DigiManager es un singleton que administra los modulos de
+digitalizacion. Todos los modulos de digitalizacion deben registrarse
+fDM->AddNewModule(myDM);
+\begin{lstlisting}[language=C++, frame = single]
+G4DigiManager * fDM = G4DigiManager::GetDMpointer();
+G4int myHitsCollID = fDM->GetHitsCollectionID( "hits_collection_name" );
+G4int myDigiCollID = fDM->GetDigiCollectionID( "digi_collection_name" );
+MyHitsCollection * HC = fDM->GetHitsCollection( myHitsCollID );
+MyDigiCollection * DC = fDM->GetDigiCollection( myDigiCollID );
+MyHitsCollection * HC = fDM->GetHitsCollection( myHitsCollID, n );
+MyDigiCollection * DC = fDM->GetDigiCollection( myDigiCollID, n );
+\end{lstlisting}
+
+
+
+\subsection*{Accediendo a la colección de dígitos}
+G4DigiManager al igual que G4SDManager tiene acceso a los hits, pero
+adicionalmente G4DigiManager tiene acceso a los digitos. Una
+G4Trajectory es creada pro G4TrackingManager cuando un G4Track es
+pasdo por el G4EventManager.
+
+\subsection*{Tracking y Physics }
+G4Trajectory y G4TrajectoryPoint son clases heredadas de G4VTrajectory
+y G4VTrajectoryPoint.
+
+Una G4Trajectory tiene los siguientes miembros:
+\begin{enumerate}
+\item ID del track y su padre
+\item Nombre de la particula, carga y codigo PDG.
+\item Una coleccion de G4TrajectoryPoint
+\end{enumerate}
+
+\begin{enumerate}
+\item G4TrackingManager: comunica las categorias event, track y
+  tracking. El recibe un track del event manager y finaliza la
+  trackializacion. Este manager agrega los punteros G4Trajectory y
+  G4UserTrackingAction al G4SteppingManager
+\item G4SteppingManager: Juega un papel esencial en la trackialization
+  de la particula.
+\end{enumerate}
+
+Algoritmo para manipular los steps.
+\begin{enumerate}
+\item Inicio del Step.
+\item Si la particula se detiene los procesos atRess definen una
+  longitud temporal para el paso. Se llaman primeros los procesos que
+  la menor duracion (length in time)
+\item Todos los procesos continuos o discrtes proponen una longitd del
+  paso (real, espacial ). Se toma la longitud mas pequeña.
+\item El geometry navigator calcula la distancia minima a una frontera
+  del volumen si el paso del proceso es menor, entonces se selecciona
+  la longitud del paso del proceso. En caso contrario se calcula la
+  distancia a la siguiente frontera mas cercana. Siempre se toma el
+  minino entre ambas distancias.
+\item Se actualiza las propiedades físicas de todos los procesos
+  continuo como la energia cinetica al final es la suma de las
+  energias cineticas, la posicion y el tiempo. Y se almacena la
+  SecundaryList
+\item Se mira la energía cinetica para ver si termino los procesos
+  continuos.
+\item Se invocan a los procesos discretos. Se actualizan las
+  propiedades físicas y se guarda la SecundaryList.
+\item Se recalcula "Safety"
+\item Si el step es limitado por el volumen, empujar la partícula al siguiente volumen.
+\item Manipular la informacion del hit.
+\item Llamar la intervencion del usuario G4UserSteppingAction
+\item Guardar datos de la trayectoria.
+\item Actualizar el camino libre medio de procesos discreto.
+\item Redefinir la longitud maxima de interaccion de los procesos
+  discretos, si la particula padre esta aun viva.
+\item Fin del Step.
+\end{enumerate}
+
+\section*{Stacking}
+G4StackManager has three stacks, named urgent, waiting and
+postpone-to-next-event, which are objects of the G4TrackStack
+class. By default, all G4Track objects are stored in the urgent stack
+and handled in a "last in first out" manner. In this case, the other
+two stacks are not used. However, tracks may be routed to the other
+two stacks by the user-defined G4UserStackingAction concrete class.
+
+If the methods of G4UserStackingAction have been overridden by the
+user, the postpone-to-next-event and waiting stacks may contain
+tracks. At the beginning of an event, G4StackManager checks to see if
+any tracks left over from the previous event are stored in the
+postpone-to-next-event stack. If so, it attemps to move them to the
+urgent stack. But first the PrepareNewEvent() method of
+G4UserStackingAction is called. Here tracks may be re-classified by
+the user and sent to the urgent or waiting stacks, or deferred again
+to the postpone-to-next-event stack. As the event is processed
+G4StackManager pops tracks from the urgent stack until it is empty. At
+this point the NewStage() method of G4UserStackingAction is called. In
+this method tracks from the waiting stack may be sent to the urgent
+stack, retained in the waiting stack or postponed to the next event.
+
+\section*{Tecnicas de Preferenciación de eventos (Event Biasing)}
+El objetivo es reducir el tiempo de simulación escogiendo aquellos
+eventos que son relevantes para los intereses de la simulación. Por
+ejemplo para calcular el blindaje, Algunas tecnicas de preferenciacion
+de eventos son:
+\begin{enumerate}
+\item Production cuts y threshold
+\item Basados en la Geometria (Importance sampling para una region o
+  volumen) o un Weight window.
+\item Basados por particulas (Tomar solo las particulas secundarias
+  mas energéticas. No se conserva la energía)
+\item Basados en eventos primarios ( escoger el tipo de evento mas
+  importante, el momento la distribucion. En este caso hay que tener
+  un solido conocimiento de la fíßica requerida)
+\item Incrementar la sección eficaz de un proceso
+\item G4VSDFilter.??
+\end{enumerate}
+
+\section*{Geant4 Notas apartes}
+\begin{enumerate}
+\item La geometria tambien se puede definir en autocad y luego
+  importarla a Geant. aplicara lo mismo para SolidWorks?
+\item El usuario no debería eliminar la geometría manualmente, de eso
+  se encarga VolumeStorer, administrado por el RunManager.
+\item El unico volumen que no debe ponerse de un volumen madre es el
+  mundo, en su lugar se pone un 0, de hecho esto es lo que permite
+  distingui al mundo de los otros volumenes.
+\item A todos los solidos se les puede sacar el volumen y el área
+  superficial a traves de los métodos. GetCubicVolume() y
+  GetSurfaceArea(). Para solidos complejos utiliza integración por
+  montecarlo.
+\item El mundo tampoco se puede rotar.
+\item Las rotaciones se definen respecto al volumen madre.
+\item Para todo tipo de partícula existe una librería granular
+  correspondiente.
+\item Los G4Isotope, G4Element y G4Material no deberían eliminarse.
+\item Los primary generators como G4ParticleGun se deben eliminar en
+  el destructor de G4VUserPrimaryGeneratorAction
+\item Se puede invocar mas de un generator o el mismo mas de una ves
+  para producir eventos primarios mucho mas complicados.
+\item Uno puede crear su propio RunManager como herencia de
+  G4RunManager.
+\item EL sobrelapamiento de eventos se puede lograr de diferentes
+  modos, el primero usando multiples generadores (G4VPrimaryGenerator)
+  o simplemente mezclando hits o digitos.
+\item Los G4MultiFunctionalDetector tienen Biasing scorers específicos.
+\item Todos los G4VPrimitiveScorer deben unsar un G4THitsMap.
+\item Los messenger deben tener precaucion de si la que se va a
+  cambiar se hace antes o despues de correr el run.
+\item En Geant4 se pueden crear mundos paralelos. Es decir pueden
+  haber varios mundos en la simualación.
+\item Los tracks de las particulas negativas se pintan de rojo, las
+  neutrales verde y las positivas azules.
+\item While in sequential mode the action classes are instatiated just
+  once, via invoking the method: B1ActionInitialization::Build() in
+  multi-threading mode the same method is invoked for each thread
+  worker and so all user action classes are defined thread-local
+  A run action class is instantiated both thread-local and global
+  that's why its instance is created also in the method
+  B1ActionInitialization::BuildForMaster() which is invoked only in
+  multi-threading mode.
+\item G4Accumulable<> type instead of G4double and G4int types is used
+  for the B3aRunAction data members in order to facilitate merging of
+  the values accumulated on workers to the master. Currently the
+  accumulables have to be registered to G4AccumulablesManager and
+  G4AccumulablesManager::Merge() has to be called from the users code.
+\item Para visualizar con OpenInventor a que tirarle un nucleo
+  adicional.
+\end{enumerate}
+
+
+
+
+
+\section*{Acceder a información de la simulación}
+Para acceder a la informacion se pueden acceder directamente a cada
+una de las partes esenciales de la estructura de las simulaciones de
+geant4. A traves de los User hook (Stepping, Event, Trackingaction,
+Runaction). Otra forma es usar Multifuctional detector mas scoring, de
+esta forma el runmanager genera la estructura de la simulacion, pero
+se requiere acceder a colleccions de hit atraves de un event. Y esto
+obliga a la generación de mapas.  La otra forma es crear una herencia
+de Vhits que le permita obtener la informacion de relevacia de los
+hits.En los hits se puede almacenar la informacion asociada con los
+steps. Energia depositada, tiempo y posicion por step, momento y
+energia cinetica del track, información geométrica. Luego se hace una
+coleccion de hits.
+
+
+
+
+\section*{Interpretación de algunas lineas de código}
+\begin{enumerate}
+\item
+  \begin{lstlisting}[language=C++, frame = single]
+    B1RunAction::B1RunAction()
+    : G4UserRunAction(),
+    fEdep(0.),
+    fEdep2(0.)
+  \end{lstlisting}
+ 
+
+  Significa que el constructor esta siendo heredado y que unas variables
+  se estan inicializando, en el fondo lo relevante del constructor esta
+  siendo heredado, la variables que se inicializan son las que conocemos
+  como datos miembro de la clase.
+\end{enumerate}
+
+
+\section*{Extensiones}
+\textbf{Definición} una macro es un fragmento de codigo, donde se use
+el nombre del macro se reemplaza por el contenido del macro. Hay de
+dos tipos objetos y funciones
+\begin{enumerate}
+\item .in son para ejecutar en batch mode
+\item .mac fragmento de cogido para ejecutar en batch mode no difiere
+  del .in
+\end{enumerate}
+
+\section*{Trucos Generales}
+\begin{enumerate}
+\item Para visualizar un arbol de root se usa el comando: TBrowser p
+\item Las librerias que no empienzan con el nombre de ejemplo o del
+  codigo B1, entonces son librerias propias de Geant
+\item Si no se ha guardado un archivo src o include entonces cmake
+  genera problemas
+\item /usr/share/Geant4-10.2.1/examples/ Aca estan los ejemplos
+  actualizados de Geant4
+\item Para cambiar los nombres de los archivos debe mirar y
+  modificarse primero la CMakeList.txt y finalmente el GNUmakefile
+\end{enumerate}
+
+\section*{Algunos Comandos usados en problemas}
+\begin{enumerate}
+\item grep -re palabras /dir
+\item Importante para lograr esto es importante borrar el cache
+  (CMakeCache.txt) antes de ejecutar el comando. Como no existe cmake
+  clean toca borrar todos los archivos generados por el CMake para
+  "curarse en salud" o simplemente eliminar todo lo que contenga la
+  carpeta build $rm -rf *$
+  \begin{lstlisting}
+    cmake -D WITH_GEANT4_UIVIS=OFF ../B1/
+    cmake -DG4MULTITHREADED=OFF ../B1/
+  \end{lstlisting}
+\item gcc --version
+\end{enumerate}
+
+\section*{Algunas herramientas importantísimas de aprender}
+\begin{enumerate}
+\item ULM (Unified Modeling Language): Es un lenguaje gráfico que
+  permite usar notacion industrial estandar para el desarrollo de
+  aplicaciones.
+\item Test-driven development (TDD): Muy útil para hacer pruevas de
+  validación y trabajar en grupos de que la estructura del programa
+  sea la que se acordó
+\end{enumerate}
+
+\section*{Cosas que me salté}
+\begin{enumerate}
+\item GPS
+\item CLHEP library
+\item Biasing Events.
+\item Revision detalla de Geometry y Electromagnetic Field
+\item Persintency
+\item Geometrias Paralelas
+\end{enumerate}
+
+
+\end{document}

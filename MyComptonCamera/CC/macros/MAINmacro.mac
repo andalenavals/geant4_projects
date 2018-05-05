@@ -1,0 +1,56 @@
+############################################
+##   The Compton Camera FCF macro file    ##
+############################################
+###################################################################################
+### the behaviour of the package can be modified using the following commands: 
+### -> /CCFCF/plate/place    bool
+###    					   false default
+### -> /CCFCF/plate/material material      geant4 format
+###    					   G4_Fe default
+### -> /CCFCF/plate/thickness tick unit
+###				           5.0 default
+###					   Thickness of sample with (???x??xthick)
+### -> /CCFCF/plate/thickness x0 y0 z0 unit
+###                                        0.0 0.0 0.0 cm
+###					   Position of the center of the bottom face
+### -> /CCFCF/update
+###				Run it after modifying parameters
+###################################################################################
+
+
+/run/verbose 1
+/tracking/verbose 0
+#/geometry/navigator/verbose 1
+
+#/testhadr/Physics empenelope #QGSP_BERT_HP
+
+#/CCFCF/plate/place
+#/CCFCF/plate/thickness x0 y0 z0 unit
+/CCFCF/plate/material G4_Al # Geant4 format
+/CCFCF/plate/thickness	0.0 cm
+
+/run/initialize
+#/CCFCF/update
+
+###visualize? remember to set the correct flags!
+#/control/execute macros/vis.mac 
+#/CCFCF/run/ROOTfilename test
+
+/gps/particle ion
+/gps/ion 25 54 0 0
+/gps/position 0.0 0.0 0.0
+/gps/energy 0.0 MeV
+#/run/beamOn 2
+
+#/gps/particle gamma
+#/gps/energy 0.5 MeV
+#/gps/position 0.0 -0.0 0.0
+#/gps/direction 0.0 0.0 0.0
+#/gps/ang/type iso
+#/gps/ang/mintheta 0 deg
+#/gps/ang/maxtheta 65 deg
+#/gps/ang/rot1 1 0 0
+#/gps/ang/rot2 0 0 1
+/run/beamOn 20000000
+
+

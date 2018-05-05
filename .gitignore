@@ -4,12 +4,7 @@ __pycache__/
 *$py.class
 
 # Images and data files
-*.fits
-*.fit
-*.fz
-*.txt
 *.png
-*.riz
 *~
 *.json
 *.err
@@ -18,6 +13,8 @@ __pycache__/
 *.eps
 *.pdf
 *.jgp
+*#
+*.#
 
 # mypy
 .mypy_cache/

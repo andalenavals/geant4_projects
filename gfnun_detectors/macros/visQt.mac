@@ -1,0 +1,49 @@
+#####################################
+###### visualization commands #######
+#####################################
+
+## Remember to use Immediate for pictures and Stored for animations
+
+/run/initialize
+
+/grdm/analogueMC 1
+
+/vis/open OGLIQt
+#/vis/open OGLSQt
+/vis/scene/create
+/vis/viewer/reset
+/vis/viewer/set/background black
+## round objects 'precision'
+/vis/viewer/set/lineSegmentsPerCircle 29
+## drawing style
+#/vis/viewer/set/style surface
+/vis/viewer/set/style wireframe
+## hide edged that are behind others
+##(this also set the drawwing of edges)
+#/vis/viewer/set/hiddenEdge true
+## drawing of edges
+#/vis/viewer/set/edge true
+## for single items is better to set the following:
+#/vis/viewer/set/auxiliaryEdge true
+#/vis/viewer/set/hiddenEdge false
+
+/vis/drawVolume 
+
+/vis/scene/add/axes 0. 0. 0. 10 cm
+
+/vis/scene/add/trajectories
+/vis/scene/endOfEventAction accumulate
+
+#/vis/ogl/set/fade 1.
+#/vis/viewer/refresh
+/vis/viewer/set/viewpointThetaPhi 0 0
+#/vis/geometry/set/lineStyle world
+
+## Cut CameraCompton in half, nice :) and play with the cut. 
+## Up to three planes first number in "change" is the index.
+#/vis/viewer/addCutawayPlane 0. 0. 0. cm
+#/vis/viewer/changeCutawayPlane 0 0. 0. 0. cm -1 -1 0
+## x-y plane slice of LuWuSia
+#/vis/viewer/set/sectionPlane on 0. 0. -8. cm 1 1 1
+/GFNUNDetectors/run/ROOTfilename GFNUNDetectors
+/run/beamOn 10

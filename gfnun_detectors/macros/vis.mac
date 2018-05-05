@@ -1,0 +1,14 @@
+#####################################
+###### visualization commands #######
+#####################################
+/vis/open DAWNFILE
+#/vis/open HepRepFile 
+
+/vis/drawVolume
+#/vis/scene/add/axes 0 0 0 10 cm
+#/vis/scene/create
+/vis/scene/add/trajectories
+/vis/scene/add/hits
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/flush
+

@@ -1,0 +1,133 @@
+###################################
+##   GFNUNDetectors macro file    ##
+###################################
+
+###################################################################################
+### the behaviour of the package can be modified using the following commands: 
+### 
+### -> /GFNUNDetectors/run/ROOTfilename test
+###    				  If not specified the usual GFNUNdetectors will be used
+###				  However, the run number is ALWAYS added, in this example:
+###				  test_run#.root
+### -> /GFNUNDetectors/run/ASCIIoutput true
+###    				 false #default false
+### -> /GFNUNDetectors/run/stepVerbose true
+###    				 false #default false				  
+### -> 	/ComptonCamera/run/fussy true		
+###    				 false #default false. The Compton interactions (per volume) 
+###				 will be registered
+### -> /GFNUNDetectors/detector/opticalphotons true
+###    				    (Geometry) Do you want use optical photons?? default:: true
+### -> /GFNUNDetectors/detector/"detector_selected"/placeDetector true 
+###    								 Do you want place this detector?
+###								 default false
+### -> /GFNUNDetectors/detector/"detector_selected"/position X0 Y0 Z0 [unit]
+###    				    	         Measured to the frontal part of it.
+### -> /GFNUNDetectors/detector/"detector_selected"/rotationX angle [unit]
+###    					        	      0. deg default
+### 							     first rotate around X axis, 
+###							     then rotate around Y axis
+### -> /GFNUNDetectors/detector/"detector_selected"/rotationY angle [unit]
+###    					        	      0. deg default
+### -> /GFNUNDetectors/source/position X0 Y0 Z0 [unit] 0 0 0 cm default
+###    				       	     	Source position. The source is inside a capsule
+### 						This option define the capsule position
+### -> /GFNUNDetectors/source/capsule/rotationX angle [unit]
+###    					        0. deg default
+### 						first rotate around X axis, 
+###						then rotate around Y axis
+### -> /GFNUNDetectors/source/capsule/rotationY angle [unit]
+###    					        0. deg default
+### -> /GFNUNDetectors/plate/material "Plate_material"  // format:: Geant4 database material list
+###    					     default::G4_Fe
+### -> /GFNUNDetectors/plate/plate/thickness  x0 [unit]
+###    					       5.*mm : default
+### -> /GFNUNDetectors/update
+###				Run it after modifying parameters
+###################################################################################
+
+#/GFNUNDetectors/run/stepVerbose true #default false
+#/GFNUNDetectors/run/ASCIIoutput true   #default false
+/GFNUNDetectors/run/fussy false
+
+/run/verbose 0
+/tracking/verbose 0
+#/geometry/navigator/verbose 1
+
+
+/GFNUNDetectors/detector/opticalphotons false
+
+/GFNUNDetectors/detector/Ge10/placeDetector false
+/GFNUNDetectors/detector/Ge40/placeDetector false
+/GFNUNDetectors/detector/NaI2x2/placeDetector false
+/GFNUNDetectors/detector/NaI3x3/placeDetector false
+/GFNUNDetectors/detector/Plastic/placeDetector true
+/GFNUNDetectors/detector/CsI/placeDetector false
+/GFNUNDetectors/detector/Dummy/placeDetector false
+
+#parameters section
+
+#Start here
+
+/GFNUNDetectors/source/position 0.0 0.0 0. cm ### (X Y Z)
+/GFNUNDetectors/source/capsule/rotationX 0. deg
+/GFNUNDetectors/source/capsule/rotationY 90. deg
+
+/GFNUNDetectors/detector/Ge10/position 0. 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/Ge10/rotationX 180. deg
+/GFNUNDetectors/detector/Ge10/rotationY 0. deg
+
+/GFNUNDetectors/detector/Ge40/position -0.5 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/Ge40/rotationX 180. deg
+/GFNUNDetectors/detector/Ge40/rotationY 0. deg
+
+/GFNUNDetectors/detector/NaI2x2/position -5. 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/NaI2x2/rotationX 180. deg
+/GFNUNDetectors/detector/NaI2x2/rotationY 0. deg
+
+/GFNUNDetectors/detector/NaI3x3/position 2.5 0.0 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/NaI3x3/rotationX 90. deg
+/GFNUNDetectors/detector/NaI3x3/rotationY 0. deg
+
+/GFNUNDetectors/detector/Plastic/position 0.5 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/Plastic/rotationX 0. deg
+/GFNUNDetectors/detector/Plastic/rotationY 0. deg
+
+/GFNUNDetectors/detector/CsI/position -0.5 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/CsI/rotationX 180. deg
+/GFNUNDetectors/detector/CsI/rotationY 0. deg
+
+/GFNUNDetectors/detector/Dummy/position 0. 0. 0. cm ### (X Y Z)
+/GFNUNDetectors/detector/Dummy/rotationX 0. rad
+/GFNUNDetectors/detector/Dummy/rotationY 0. rad
+
+/run/initialize
+
+/GFNUNDetectors/plate/material G4_Al # Geant4 format
+/GFNUNDetectors/plate/thickness 0. cm # thickness unit
+
+/GFNUNDetectors/update
+
+#visualize? remember to set the correct flags!
+/control/execute macros/vis.mac
+
+#print?
+#/control/execute macros/print.mac
+
+#evens (if any)
+#/GFNUNDetectors/run/ROOTfilename Exp_NaI_OpticalPhoton_false_3.9_MeV_setup_2
+#/GFNUNDetectors/run/ROOTfilename  Plate_Al_t_{thick}_cm_posDetec_Plastic_23cm_EvNum_150Mev_date_7_12_12
+#/run/beamOn 150000000
+/grdm/setRadioactiveDecayFile 27 60 /usr/share/geant4-radioactivedata/RadioactiveDecay4.1/z27.a60
+/gps/particle ion
+/gps/ion 27 60 0 0
+/gps/energy 0.0 keV
+/gps/position 0. 0.0 0.0 cm
+#/GFNUNdetectors/fullChain true
+/run/beamOn 1000000
+
+
+#/vis/disable
+#/run/beamOn 100000		
+#/vis/enable
+#/vis/reviewKeptEvents

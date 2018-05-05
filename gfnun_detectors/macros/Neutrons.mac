@@ -1,0 +1,45 @@
+###################################
+##   GFNUNDetectors macro file    ##
+###################################
+
+#/GFNUNDetectors/run/stepVerbose true #default false
+#/GFNUNDetectors/run/ASCIIoutput true   #default false
+/GFNUNDetectors/run/fussy false
+
+/run/verbose 
+/tracking/verbose 1
+#/geometry/navigator/verbose 1
+
+#Start here
+#/GFNUNDetectors/phys/SelectPhysics QGSP_BERT_HP
+/GFNUNDetectors/source/position 0.0 22.5 0. cm ### (X Y Z) important!!! /GFNUNDetectors/ShieldingCastle/height height/half, do not forget to define the position of initilial particles in macros/Cf252NeutronVertex.txt
+
+/run/initialize
+#parameters section
+/GFNUNDetectors/ShieldingCastle/position 0. 0. 0. cm #measured to the center of the base
+/GFNUNDetectors/ShieldingCastle/wallleadthick 5.0 cm #thickness of lead wall
+/GFNUNDetectors/ShieldingCastle/roofleadthick 5.0 cm #thickness of lead roof
+/GFNUNDetectors/ShieldingCastle/paraffinradius 27.5 cm #tradius of paraffin block
+/GFNUNDetectors/ShieldingCastle/height  45.0 cm #height of castle
+					
+/GFNUNDetectors/update
+
+#visualize? remember to set the correct flags!
+#/control/execute macros/vis.mac
+
+#print?1
+#/control/execute macros/print.mac
+
+#evens (if any)
+#/GFNUNDetectors/run/ROOTfilename test_137Cs_OpPhot_On_50kev_reso_7.84
+#/run/beamOn 100000
+
+## Neutron source
+/control/execute macros/Cf252NeutronVertex.txt
+
+/run/beamOn 10
+
+#/vis/disable
+#/run/beamOn 100
+#/vis/enable
+#/vis/reviewKeptEvents

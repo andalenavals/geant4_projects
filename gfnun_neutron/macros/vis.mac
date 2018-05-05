@@ -1,0 +1,23 @@
+#/vis/open DAWNFILE
+
+/vis/drawVolume
+#/vis/scene/add/axes 0 0 0 10 cm
+#/vis/scene/create
+
+
+
+/vis/scene/add/trajectories
+/vis/scene/add/hits
+/vis/scene/add/axes
+#######################Escala###################################
+/vis/scene/add/scale 50 cm x 1 0 0 manual  50 75 -80 cm  	
+#/vis/scene/add/scale 50 cm y 1 0 0  manual 75 0 0 cm  	
+/vis/scene/add/scale 50 cm z 1 0 0 manual 80 75 -40 cm  	
+/vis/viewer/set/viewpointThetaPhi 60 60 deg
+#/vis/viewer/set/viewpointVector 100 0 0
+#/vis/viewer/set/viewpointVector 0 -8000  100 
+#para ver los ejes en una de las esquinas
+#/vis/viewer/zoom 1.4
+#/vis/scene/endOfEventAction refresh 10000
+/vis/scene/endOfEventAction accumulate
+/vis/viewer/flush

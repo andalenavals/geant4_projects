@@ -1,0 +1,65 @@
+**  Sun Aug 29 19:05:08 COT 2010
+
+I created this folder from ./Neutrones_dummyF12
+to include the new materials sand following the cristancho´s model
+of the soil and doing the sim at different moistures
+
+see:
+
+theta1_theta_2_Vs_rho_with_delta_theta_0.05.dat
+(specially the note at the end of the file)
+
+pruebas/prueba1/ seems OK in the definition of the materiasl and the geometry
+(G4Data0.heprep)
+
+_______________________________________________________________________________
+**  Wed Sep  1 18:32:13 COT 2010
+the folder
+
+d_5cm_moistures/
+
+has the diferent runs with d=5cm and diferent moistures
+from 0% TO 70% (by weight...see the note in the file: 
+
+theta1_theta_2_Vs_rho_with_delta_theta_0.05.dat
+
+
+I created the folder 
+
+d_0cm_moistures/
+
+with the same runs as in d_5cm_moistures/ but for d=0cm.
+
+Note: The same runs I did in ../Neutrones_dummyF12 but with more neutron events.
+
+________________________________________________________________________________
+
+Wed Sep  8 18:14:25 COT 2010
+
+Hi!! I'm Zandra
+
+I created this folder Neutrones_dummyF13_mod of Neutrones_dummyF13
+wich was created by Angel Cruz.
+
+In this version of simulation I change the name of the detectors according to
+the experimental setup.
+
+This is the previous setup
+
+ --- --- --- ---                --- --- --- ---
+| 5 | 3 | 1 | A |             | B | 2 | 4 | 6 |
+|   |   |   |   |   source    |   |   |   |   |  ---->
+ --- --- --- ---               --- --- --- ---       x
+
+The number 1 up to 8 are the number of the neutron 
+detector.
+
+The new setup is 
+
+ --- --- --- ---                --- --- --- ---
+| 8 | 7 | 6 | 5 |             | 4 | 3 | 2 | 1 |
+|   |   |   |   |   source    |   |   |   |   |  ---->
+ --- --- --- ---               --- --- --- ---       x
+
+The idea of the new setup is to use the detectors 1,2, 7 and 8 in
+ordet to locate the mine in the axis y.
