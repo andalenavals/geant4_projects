@@ -14,10 +14,11 @@ include_directories(${PROJECT_SOURCE_DIR}/include)
 #----------------------------------------------------------------------------
 # Find ROOT variables if the variable G4ANALYSIS_USE_ROOT is set
 #
-
+list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 find_package(ROOT REQUIRED)
 if(ROOT_FOUND)
 add_definitions(-DG4ANALYSIS_USE_ROOT)
+include(${ROOT_USE_FILE})
 include_directories(${ROOT_INCLUDE_DIR} ${Geant4_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/include)
 message(STATUS "ROOT found. --> with ROOT enabled.")
 else()

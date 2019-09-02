@@ -4,7 +4,7 @@
 
 #include "G4RunManager.hh"
 #include "G4Run.hh"
-#include "G4ParameterManager.hh"
+#include "G4AccumulableManager.hh"
 #include "G4LogicalVolumeStore.hh"
 #include "G4LogicalVolume.hh"
 #include "G4UnitsTable.hh"
@@ -26,9 +26,9 @@ B1RunAction::B1RunAction()
   new G4UnitDefinition("nanogray" , "nanoGy"  , "Dose", nanogray);
   new G4UnitDefinition("picogray" , "picoGy"  , "Dose", picogray);
 
-  G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-  parameterManager->RegisterParameter(fEdep);
-  parameterManager->RegisterParameter(fEdep2);
+  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
+  accumulableManager->RegisterAccumulable(fEdep);
+  accumulableManager->RegisterAccumulable(fEdep2);
 }
 
 
@@ -40,8 +40,8 @@ void B1RunAction::BeginOfRunAction(const G4Run*)
   //inform the runManager to save random number seed
   G4RunManager::GetRunManager()->SetRandomNumberStore(false);
 
-  G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-  parameterManager->Reset();
+  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
+  accumulableManager->Reset();
 
 }
 
@@ -51,9 +51,9 @@ void B1RunAction::EndOfRunAction(const G4Run* run)
   G4int nofEvents = run->GetNumberOfEvent();
   if (nofEvents == 0) return;
 
-  // Merge parameters 
-  G4ParameterManager* parameterManager = G4ParameterManager::Instance();
-  parameterManager->Merge();
+  // Merge accumulables 
+  G4AccumulableManager* accumulableManager = G4AccumulableManager::Instance();
+  accumulableManager->Merge();
   
   // Compute dose
   G4double edep  = fEdep.GetValue();
